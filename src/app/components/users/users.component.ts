@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { User } from '../../models/User';
-import { DataService } from '../../services/data.service';
+import { User } from '../../models/user';
+import { UserService } from '../../services/user.service';
 
-import { flattenStyles } from '../../../../node_modules/@angular/platform-browser/src/dom/dom_renderer';
+import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
 
 @Component({
   selector: 'app-users',
@@ -21,12 +21,18 @@ export class UsersComponent implements OnInit {
   loaded: boolean = false;
   showUserForm: boolean = false;
   @ViewChild('userForm')form: any;
-  constructor(private dataService: DataService) { }
+  data: any;
+  constructor(private dataService: UserService) { }
 
   ngOnInit() {
     
-    this.users = this.dataService.getUsers();
-    this.loaded = true;
+    this.dataService.getData().subscribe(data => {
+      console.log(data);
+    });
+    this.dataService.getUsers().subscribe(users => {
+      this.users = users;
+      this.loaded = true;
+    }); 
   }
 
   toggleHide(user: User) {
